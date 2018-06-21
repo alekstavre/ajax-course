@@ -45,6 +45,21 @@
     }
 
     function addArticles(){
-        
+     let htmlContent = '';
+     const data = JSON.parse(this.responseText);  
+     
+     if (data.response && data.response.docs && data.response.docs.length > 1){
+         htmlContent = '<ul>' + data.response.docs.map(article => `<li class="article">
+         <h2><a href="${article.web_url}">${article.headline.main}"</a></h2>
+         <p>${article.snippet}</p>
+         </li>`
+            ).join('')+'</ul>';
+        }else {
+            htmlContent = '<div class = "error-no-articles">No articles available</div>';
+        }
+     
+    responseContainer.insertAdjacentHTML('beforeend',htmlContent);
+
     }
+
 })();
