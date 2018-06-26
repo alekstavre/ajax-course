@@ -16,15 +16,24 @@
             headers:{
                 Authorization:'Client-ID 0bc6e7701a4fd1ad78ab4d31e402a87cc60f13425f74f22daac56de20db9d989'
             }
-        }).done(addImage);
-    });
-    function addImage(images) {
-        const firstImage = images.results[0];
+        }).done(addImage)
+        .fail(function(err){
+            requestError(err, 'image');
+        })
+        });
+        function addImage(data){
+            let htmlContent = '';
+            
+            if(data && data.results && data.results[0]) {
+                const firstImage = data.results[0];
+                htmlContent = `<figure>
+                    <img src= "${firstImage.urls.regular}" alt= "${searchedForText}">
+                    <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+                </figure>`;
+            }else {
+                htmlContent = '<div class="error-no-image">No images available</div>';
+            }
     
-        responseContainer.insertAdjacentHTML('afterbegin', `<figure>
-                <img src="${firstImage.urls.small}" alt="${searchedForText}">
-                <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
-            </figure>`
-        );
-    }
+            responseContainer.insertAdjacentHTML('afterbegin', htmlContent);
+        }
 })();
